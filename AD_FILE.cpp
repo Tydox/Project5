@@ -34,9 +34,19 @@ AD_FILE::AD_FILE(const std::string& fn)
 
 AD_FILE::AD_FILE(const AD_FILE& adf)
 {
-	
-	setFileName(adf.getFileName());
-	lastModified = adf.getPTime();
+	*this = adf;
+}
+
+void AD_FILE::operator=(const AD_FILE& adf)
+{
+	if (this != &adf)
+	{
+		setFileName(adf.getFileName());
+		lastModified = adf.getPTime();
+	}
+	std::cout << "Same File, nothing to copy!";
+
+	//return *this;
 }
 
 bool AD_FILE::operator==(const AD_FILE& fn) const

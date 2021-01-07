@@ -12,8 +12,8 @@ DataFile::DataFile(const DataFile& df):AD_FILE(df.getFileName())
 
 int DataFile::getSize() const
 {
-	//return size of object in bytes
-	return sizeof(*this);
+	//return size of data in bytes
+	return data.size();
 }
 
 std::string DataFile::getData() const
@@ -27,6 +27,13 @@ void DataFile::setData(std::string dt)
 		throw std::logic_error("Given Param to setData is null");
 
 	data = dt;
+}
+
+void DataFile::operator=(const AD_FILE& adf)
+{
+	const AD_FILE* tmpP = &adf;
+	const DataFile* temp = dynamic_cast<const DataFile*>(tmpP);
+	*this = *temp;
 }
 
 bool DataFile::operator==(const DataFile& df) const

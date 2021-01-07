@@ -141,11 +141,13 @@
   <ItemGroup>
     <ClCompile Include="AD_FILE.cpp" />
     <ClCompile Include="DataFile.cpp" />
+    <ClCompile Include="Folder.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AD_FILE.h" />
     <ClInclude Include="DataFile.h" />
+    <ClInclude Include="Folder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
