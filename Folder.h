@@ -2,6 +2,7 @@
 #include <iostream>
 #include "DataFile.h"
 #include "AD_FILE.h"
+#include <iomanip>
 
 #define DEF_FOLDER "root"
 //constexpr auto DEF_NAME = "root";
@@ -60,5 +61,12 @@ public:
 
 	AD_FILE& createItem(AD_FILE * adf);
 	AD_FILE& createItem(const std::string fn, const std::string fd = 0);
+
+
+	void dir()const;
+
+	static Folder* cd(std::string& path);
+	static Folder* search(std::string& path, const Folder* f = nullptr);
+	
 };
 

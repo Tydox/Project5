@@ -253,6 +253,60 @@ AD_FILE& Folder::createItem(const std::string fn, const std::string fd)
 	}
 }
 
+void Folder::dir() const
+{
+	//TODO - CHECK IF DIR PRINT INCLUDES SUB FOLDERS OR JUST ROOT 
+	std::cout << std::left << std::setw(21) << std::setfill(' ') << "Files in Directory <" << folderPath << ">" << std::endl;
+
+	for (int i = 0; i < innerfolders + innerdfiles; ++i)
+	{
+		DataFile* tmp2 = dynamic_cast<DataFile*>(files[i]);//++dataFileNum;//++innerdfiles;
+		if (tmp2) {
+			std::cout << std::left << std::setw(7) << std::setfill(' ');
+			std::cout << std::left << std::setw(8) << std::setfill(' ') << (tmp2->getSize()) / 1000 << "kb ";
+			std::cout << std::left << std::setw(30) << std::setfill(' ') << tmp2->getFileName();
+			continue;
+		}
+
+		Folder* tmp = dynamic_cast<Folder*>(files[i]);
+		if (tmp) {
+			std::cout << std::left << std::setw(7) << std::setfill(' ') << "<DIR>";
+			std::cout << std::left << std::setw(8) << std::setfill(' ');
+			std::cout << std::left << std::setw(30) << std::setfill(' ') << tmp->getFileName();
+			
+			continue;
+		}
+	}
+	
+}
+
+Folder* Folder::cd(std::string& path)
+{
+	search(path, nullptr);
+	return nullptr;
+}
+
+Folder* Folder::search(std::string& path, const Folder* f)
+{
+	for (int i = 0; i < f->innerfolders + f->innerdfiles; ++i)
+	{
+		Folder* tmp = dynamic_cast<Folder*>(f->files[i]);
+		if (tmp) {
+			if (tmp->getFileName() == path)
+			{
+				return tmp;
+			}
+			else
+			{
+				search(path, tmp);
+			}
+		}
+	}
+
+	std::cout << "Folder was not found!!!";
+	return nullptr;
+}
+
 //std::string Folder::getFullPath()
 //{
 //	return folderPath;
