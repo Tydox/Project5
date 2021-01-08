@@ -1,8 +1,8 @@
 #include "DataFile.h"
 
-DataFile::DataFile(std::string fn):AD_FILE(fn)
+DataFile::DataFile(std::string fn,std::string df):AD_FILE(fn)
 {
-	
+	setData(df);
 }
 
 DataFile::DataFile(const DataFile& df):AD_FILE(df.getFileName())
@@ -21,7 +21,7 @@ std::string DataFile::getData() const
 	return this->data;
 }
 
-void DataFile::setData(std::string dt)
+void DataFile::setData(const std::string& dt)
 {
 	if (dt.empty())
 		throw std::logic_error("Given Param to setData is null");
@@ -31,6 +31,7 @@ void DataFile::setData(std::string dt)
 
 void DataFile::operator=(const AD_FILE& adf)
 {
+	//TODO ADD TRY CATCH BLOCK
 	const AD_FILE* tmpP = &adf;
 	const DataFile* temp = dynamic_cast<const DataFile*>(tmpP);
 	*this = *temp;
@@ -60,10 +61,11 @@ bool DataFile::dfcmp(const DataFile& df) const
 	//BUG DO I NEED TO VERIFY IF THE TIMES ARE THE SAME AS WELL??????
 
 	//use operator in base to check names
-	bool fileName = AD_FILE::operator==(df.getFileName());
+//	bool fileName = AD_FILE::operator==(df.getFileName());
 	//get data from both datafiles and compare their strings
 	bool fileData = (this->getData() == df.getData());
 	//use logical compare to return if files are the same
 
-	return (fileName && fileData);
+	//return (fileName && fileData);
+	return fileData;
 }

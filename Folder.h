@@ -45,13 +45,20 @@ public:
 	//BUG CHECK WHAT IT MEANS TO RETURN FULL PATH TO A FILE
 	//std::string getFullPath();
 
-	void addFileToArray(const AD_FILE& adf);
-	void addNums(const AD_FILE* adf);
-
-
-	virtual void operator=(const AD_FILE& adf);
-
-
+	std::string getData()const;
 	
+	void addFileToArray(AD_FILE& adf,char mode='0');
+	void addNums(AD_FILE* adf);
+
+
+	virtual void operator=(AD_FILE& adf);
+
+
+	void mkfile(const std::string fn, const std::string fd);
+	void mkDir(const std::string fn);
+	void isExist(const std::string fn, char type);
+
+	AD_FILE& createItem(AD_FILE * adf);
+	AD_FILE& createItem(const std::string fn, const std::string fd = 0);
 };
 

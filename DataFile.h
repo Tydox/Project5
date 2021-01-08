@@ -17,7 +17,7 @@ protected:
 public:
 
 	//constructor
-	DataFile(std::string fn);
+	DataFile(std::string fn, std::string df);
 	//copy constructor
 	DataFile(const DataFile& df);
 	//destructor
@@ -28,7 +28,7 @@ public:
 	std::string getData()const;
 
 	//set
-	void setData(std::string dt);
+	void setData(const std::string& dt);
 	
 	virtual void operator=(const AD_FILE& adf);
 
