@@ -13,7 +13,7 @@ DataFile::DataFile(const DataFile& df):AD_FILE(df.getFileName())
 int DataFile::getSize() const
 {
 	//return size of data in bytes
-	return data.size();
+	return data.size()+1;
 }
 
 std::string DataFile::getData() const

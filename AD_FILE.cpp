@@ -43,6 +43,7 @@ void AD_FILE::operator=(const AD_FILE& adf)
 	{
 		setFileName(adf.getFileName());
 		lastModified = adf.getPTime();
+		return;
 	}
 	std::cout << "Same File, nothing to copy!";
 

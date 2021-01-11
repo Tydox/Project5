@@ -17,7 +17,7 @@ protected:
 	
 
 	void setTime();
-	std::string getTime() const;
+	//std::string getTime() const;
 	tm* getPTime()const;
 
 	//generic virtual
@@ -34,7 +34,7 @@ protected:
 		//methods
 		void setFileName(const std::string& fn);
 		std::string getFileName()const { return fileName; }
-	
+		std::string getTime() const;
 	//constructor
 	AD_FILE(const std::string& fn);
 	//copy constructor

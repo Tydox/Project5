@@ -1,5 +1,6 @@
 #pragma once
-#include <iostream>
+
+//#include <iostream>
 #include "DataFile.h"
 #include "AD_FILE.h"
 #include <iomanip>
@@ -19,13 +20,16 @@ private:
 	int innerdfiles;//total data files in this folder
 	
 	std::string folderPath;
-	static Folder* root;
+	
 	static bool rootCreated;
 
 protected:
 
 
 public:
+	static Folder* root;
+	//static Folder root;
+
 	//default constructor
 	Folder();
 
@@ -44,7 +48,7 @@ public:
 
 	//get
 	//BUG CHECK WHAT IT MEANS TO RETURN FULL PATH TO A FILE
-	//std::string getFullPath();
+	std::string getFullPath() const;
 
 	std::string getData()const;
 	
@@ -57,16 +61,28 @@ public:
 
 	void mkfile(const std::string fn, const std::string fd);
 	void mkDir(const std::string fn);
-	void isExist(const std::string fn, char type);
-
+	//void isExist(const std::string fn, char type);
+	void isExist(const std::string fn);
 	AD_FILE& createItem(AD_FILE * adf);
-	AD_FILE& createItem(const std::string fn, const std::string fd = 0);
+	AD_FILE& createItem(const std::string fn, const std::string fd = "0");
 
 
 	void dir()const;
 
 	static Folder* cd(std::string& path);
 	static Folder* search(std::string& path, const Folder* f = nullptr);
+
+	virtual bool operator==(const AD_FILE& fn) const;
+	bool operator==(const Folder& fn) const;
+	bool fcmp(const Folder& fn, const Folder& ft) const;
+
+
+	friend bool FC(Folder& cdr, std::string& src, std::string dst);
+
+
+	static std::string& splitFileName(const std::string& fn, std::string& nfn);
+
+	DataFile* dfs(std::string& df) const;
 	
 };
 

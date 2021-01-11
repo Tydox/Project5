@@ -3,7 +3,8 @@
 //int Folder::totalfiles = 0;
 //int Folder::folderNum = 0;
 //int Folder::dataFileNum = 0;
-Folder* Folder::root=NULL;
+Folder* Folder::root= new Folder();
+//Folder Folder::root;
 bool Folder::rootCreated = false;
 
 
@@ -37,6 +38,17 @@ void Folder::killRoot(Folder& f)
 			delete tmp;//TODO CHECK IF NEED TO ADD *TMP ^^^ if need to change the if condition
 		}
 	}
+}
+
+Folder::Folder():AD_FILE("Main Root")
+{
+	files = nullptr;
+	rootCreated = false;
+	innerdfiles = 0;
+	innerfolders = 0;
+	folderPath = "";
+	
+	
 }
 
 Folder::Folder(const Folder& f,std::string& path):AD_FILE(f.getFileName())
@@ -138,7 +150,7 @@ void Folder::addFileToArray(AD_FILE& adf, char mode) //TODO CHECK IF THIS IS VAL
 			for (; i < innerfolders + innerdfiles; ++i)
 				newArray[i] = files[i];
 			
-			if (mode == '0')
+			if (mode == 'n')
 				newArray[i] = &(createItem(&adf)); //TODO CHECK THIS WARNING
 			else
 				newArray[i] = &adf;
@@ -177,10 +189,11 @@ void Folder::operator=(AD_FILE& adf)
 void Folder::mkfile(const std::string fn, const std::string fd)
 {
 	try {
-		isExist(fn, 'd');
+		//isExist(fn, 'd');
+		isExist(fn);
 		addFileToArray(createItem(fn, fd), 'n');
 	}
-	catch(std::exception error)
+	catch(std::exception& error)
 	{
 		std::cout << error.what();
 	}
@@ -189,29 +202,39 @@ void Folder::mkfile(const std::string fn, const std::string fd)
 void Folder::mkDir(const std::string fn)
 {
 	try {
-		isExist(fn, 'f');
+		//isExist(fn, 'f');
+		if (rootCreated == false)
+		{
+			rootCreated = true;
+			root = this;
+			folderPath = fn;
+		}
+		isExist(fn);
 		addFileToArray(createItem(fn), 'n');
+		
 	}
-		catch (std::exception error)
+		catch (std::exception& error)
 	{
 		std::cout << error.what();
 	}
 }
 
-void Folder::isExist(const std::string fn, char type)
+//void Folder::isExist(const std::string fn, char type) // char type can be removed i think~!!!!!!!!
+void Folder::isExist(const std::string fn) // char type can be removed i think~!!!!!!!!
 {
 	for(int i =0;i<innerdfiles+innerfolders;++i)
 	{
-		const DataFile* tmp2 = dynamic_cast<const DataFile*>(this->files[i]);
-		if (tmp2) {
-			if (tmp2->getFileName() == fn)
-				throw std::exception("File already exists! mkfile stopping!");
-		}
-		const Folder* tmp = dynamic_cast<const Folder*>(this->files[i]);
-		if (tmp) {
-			if(tmp->getFileName()==fn)
-				throw std::exception("File already exists! mkDir stopping!");
-		}
+			const DataFile* tmp2 = dynamic_cast<const DataFile*>(this->files[i]);
+			if (tmp2) {
+				if (tmp2->getFileName() == fn)
+					throw std::exception("File already exists! mkfile stopping!");
+			}
+		
+			const Folder* tmp = dynamic_cast<const Folder*>(this->files[i]);
+			if (tmp) {
+				if (tmp->getFileName() == fn)
+					throw std::exception("File already exists! mkDir stopping!");
+			}
 	}
 
 	
@@ -241,7 +264,7 @@ AD_FILE& Folder::createItem(AD_FILE* adf)
 AD_FILE& Folder::createItem(const std::string fn, const std::string fd)
 {
 	std::string fp = this->folderPath;
-	if(fd.empty())//folder
+	if(fd == "0")//folder
 	{
 		Folder* newFolder = new Folder(fn,fp);
 		return (AD_FILE&)*newFolder;
@@ -262,17 +285,19 @@ void Folder::dir() const
 	{
 		DataFile* tmp2 = dynamic_cast<DataFile*>(files[i]);//++dataFileNum;//++innerdfiles;
 		if (tmp2) {
-			std::cout << std::left << std::setw(7) << std::setfill(' ');
+			std::cout << std::left << std::setw(20) << std::setfill(' ') << tmp2->getTime();
+			std::cout << std::left << std::setw(7) << std::setfill(' ') << " ";
 			std::cout << std::left << std::setw(8) << std::setfill(' ') << (tmp2->getSize()) / 1000 << "kb ";
-			std::cout << std::left << std::setw(30) << std::setfill(' ') << tmp2->getFileName();
+			std::cout << std::left << std::setw(30) << std::setfill(' ') << tmp2->getFileName() << std::endl;
 			continue;
 		}
 
 		Folder* tmp = dynamic_cast<Folder*>(files[i]);
 		if (tmp) {
+			std::cout << std::left << std::setw(20) << std::setfill(' ') << tmp->getTime();
 			std::cout << std::left << std::setw(7) << std::setfill(' ') << "<DIR>";
-			std::cout << std::left << std::setw(8) << std::setfill(' ');
-			std::cout << std::left << std::setw(30) << std::setfill(' ') << tmp->getFileName();
+			std::cout << std::left << std::setw(8) << std::setfill(' ') << " ";
+			std::cout << std::left << std::setw(30) << std::setfill(' ') << tmp->getFileName() << std::endl;
 			
 			continue;
 		}
@@ -282,8 +307,7 @@ void Folder::dir() const
 
 Folder* Folder::cd(std::string& path)
 {
-	search(path, nullptr);
-	return nullptr;
+	return search(path, root);
 }
 
 Folder* Folder::search(std::string& path, const Folder* f)
@@ -303,11 +327,169 @@ Folder* Folder::search(std::string& path, const Folder* f)
 		}
 	}
 
-	std::cout << "Folder was not found!!!";
+	std::cout << "Path <" << path <<"> was not found!!!";
+	throw std::exception("File/Folder Was not found!");
+	//return nullptr;
+}
+
+bool Folder::operator==(const AD_FILE& fn) const
+{
+	try {
+		const Folder fnp = dynamic_cast<const Folder&>(fn);
+		return fcmp(fnp, *this);
+	}
+	catch (std::bad_cast& bc)
+	{
+		std::cout << "Failed to convert given based on virtual method, passed AD_FILE is not of type of Data File!\n";
+		std::cout << bc.what();
+		return false;
+	}
+}
+
+bool Folder::operator==(const Folder& fn) const
+{
+	return fcmp(fn,*this);
+}
+
+bool Folder::fcmp(const Folder& fn, const Folder& ft) const
+{
+	bool flag = true;
+	bool loopflag = false;
+	int f1 = ft.innerdfiles + ft.innerfolders;
+	int f2 = fn.innerdfiles + fn.innerfolders;
+
+	if (f1 != f2) // sum of files & folders is different
+		return false;
+
+	/*if (f1 == 0 && f2 == 0)
+	{
+		std::cout << "Both Folders are empty, nothing to compare! Aborting!\n";
+		return false;
+	}*/
+
+	for (int i = 0; ((i < f1) && (i < f2)); ++i,loopflag=false)
+	{
+		DataFile* f1dtmp = dynamic_cast<DataFile*>(ft.files[i]);
+		DataFile* f2dtmp = dynamic_cast<DataFile*>(fn.files[i]);
+		if (f1dtmp && f2dtmp)
+		{
+			if ((f1dtmp->getFileName() == f2dtmp->getFileName()) && (f1dtmp->getData() == f2dtmp->getData()))
+			{
+				loopflag = true;
+				continue;
+			}
+			else
+				return false;
+		}
+
+		Folder* f1ftmp = dynamic_cast<Folder*>(ft.files[i]);
+		Folder* f2ftmp = dynamic_cast<Folder*>(fn.files[i]);
+		if (f1ftmp && f2ftmp)
+		{
+			if (f1ftmp->getFileName() != f2ftmp->getFileName()) {
+				return false;
+			}
+			else
+			{
+				loopflag = true;
+				flag = fcmp(*f2ftmp, *f1ftmp);
+				if (flag == false)
+					break;
+			}
+		}
+		
+		if (!loopflag)
+			break;	
+	}
+	return flag;
+}
+
+bool FC(Folder& cdr, std::string& src, std::string dst)
+{
+	
+	std::string fileName1;
+	std::string folderName1 = Folder::splitFileName(src, fileName1);
+
+	std::string fileName2;
+	std::string folderName2 = Folder::splitFileName(dst, fileName2);
+
+	char flag1 = folderName1.at(0);
+	char flag2 = folderName2.at(0);
+	char bslash = '\\';
+	
+	if((fileName1.empty() && !fileName2.empty()) || (!fileName1.empty() && fileName2.empty()))
+	{
+		std::cout << "Not equal comparision!\n ";
+		return false;
+	}
+	Folder* ftot = nullptr;
+	Folder* f1 = nullptr;
+	Folder* f2 = nullptr;
+	
+	if (flag1 == bslash)
+		ftot = &cdr;
+	else
+		ftot = Folder::root;
+
+	f1 = ftot->cd(folderName1);
+	
+	if (flag2 == bslash)
+		ftot = &cdr;
+	else
+		ftot = Folder::root;
+
+	f2 = ftot->cd(folderName2);
+
+	if (!fileName1.empty() && !fileName2.empty())
+		if (fileName1 == fileName2)
+		{
+			DataFile* pf1 = f1->dfs(fileName1);
+			DataFile* pf2 = f2->dfs(fileName2);
+
+			return pf1 == pf2;
+		}
+	
+	return f1 == f2;
+	
+}
+
+
+std::string& Folder::splitFileName(const std::string& fn, std::string& nfn)
+{
+	std::size_t found = fn.find_last_of("/\\");
+	//std::cout << " path: " << fn.substr(0, found) << '\n';
+	//std::cout << " file: " << fn.substr(found + 1) << '\n';
+	nfn = fn.substr(found + 1);
+	std::string tmp = fn.substr(0, found);
+	return tmp;
+}
+
+// TODO CHECKKKKKKKKKKK HOOOOOOWWWWWWWWWWW TOOOOOOOOOO DOOOOOOOOO THHHHHHHHHHIIIIIIIIISSSSSSSSSSSSS
+DataFile* Folder::dfs(std::string& df) const
+{
+	for (int i = 0; i < this->innerfolders + this->innerdfiles; ++i)
+	{
+		DataFile* tmp = dynamic_cast<DataFile*>(this->files[i]);
+		if (tmp) {
+			if (tmp->getFileName() == df)
+			{
+				return tmp;
+			}
+		}
+		//Folder* tmp2 = dynamic_cast<Folder*>(this->files[i]);
+		//if (tmp2) {
+		//	if (tmp2->getFileName() == df)
+		//	{
+		//		return tmp2;
+		//	}
+		//}
+		//
+	}
+	std::cout << "File not found in folder!\n";
 	return nullptr;
 }
 
-//std::string Folder::getFullPath()
-//{
-//	return folderPath;
-//}
+std::string Folder::getFullPath() const
+{
+	return folderPath;
+}
