@@ -9,18 +9,14 @@ private:
 	std::string data;
 protected:
 	//support method for operators
-	bool dfcmp(const DataFile& df) const;
-
-	//default constructor
-	//DataFile():AD_FILE() { std::cout << "\nDefault DataFile Constructor\n"; }
-	
+	bool dfcmp(const DataFile& df) const;	
 public:
 
 	//constructor
 	DataFile(std::string fn, std::string df);
 	//copy constructor
 	DataFile(const DataFile& df);
-	//destructor
+	//destructor ###debug###
 	~DataFile() { std::cout << "\nDataFile DESTRUCTOR - \n" << this->getFileName(); data.clear(); }
 	
 	//get size in bytes of object

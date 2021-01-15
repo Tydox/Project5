@@ -31,10 +31,15 @@ void DataFile::setData(const std::string& dt)
 
 void DataFile::operator=(const AD_FILE& adf)
 {
-	//TODO ADD TRY CATCH BLOCK
-	const AD_FILE* tmpP = &adf;
-	const DataFile* temp = dynamic_cast<const DataFile*>(tmpP);
-	*this = *temp;
+	try {
+		const AD_FILE* tmpP = &adf;
+		const DataFile* temp = dynamic_cast<const DataFile*>(tmpP);
+		*this = *temp;
+	}
+	catch (std::exception&  error)
+	{
+		std::cout << error.what();
+	}
 }
 
 bool DataFile::operator==(const DataFile& df) const
@@ -58,14 +63,5 @@ bool DataFile::operator==(const AD_FILE& fn)
 
 bool DataFile::dfcmp(const DataFile& df) const
 {
-	//BUG DO I NEED TO VERIFY IF THE TIMES ARE THE SAME AS WELL??????
-
-	//use operator in base to check names
-//	bool fileName = AD_FILE::operator==(df.getFileName());
-	//get data from both datafiles and compare their strings
-	bool fileData = (this->getData() == df.getData());
-	//use logical compare to return if files are the same
-
-	//return (fileName && fileData);
-	return fileData;
+	return (this->getData() == df.getData());
 }

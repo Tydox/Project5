@@ -23,7 +23,8 @@ int main() {
 	string command, p_command;
 	char echoStream[256];
 	do {
-		std::cout << curr->getFullPath().substr(5) << ">";//deletes Root Folder Name
+		//std::cout << curr->getFullPath().substr(5) << ">";//deletes Root Folder Name
+		std::cout << curr->pathURL(curr->getFullPath()) << ">";//deletes Root Folder Name
 		cin.ignore(cin.rdbuf()->in_avail());
 		cin >> command;
 		try {
@@ -67,26 +68,34 @@ int main() {
 				cin.ignore(1);
 				cin >> command;
 				Folder* newRoot = new Folder(*Folder::root, command);
-				Folder::root = newRoot;
-				curr = Folder::root;
+				curr = root = Folder::root;
 				continue;
 			}
-		
-		if (command == "!exit")
-		{
-			quit = !quit;
-			continue;
-		}
-		if (!command.empty())
-		{
-			std::cout << "Invalid cmd, try again!\n";
-			continue;
-		}
-			
+			if (command == "!dupe")
+			{
+				std::cout << "Duping Main Folder!\n";
+				Folder* newRoot2 = new Folder(*Folder::root);
+				std::cout << "Done!\nPrinting 1 sub folder!\n";
+				newRoot2->dir();
+				delete newRoot2;
+				continue;
+			}
+
+			if (command == "!exit")
+			{
+				quit = !quit;
+				continue;
+			}
+			if (!command.empty())
+			{
+				std::cout << "Invalid cmd, try again!\n";
+				continue;
+			}
+
 		}
 		catch (exception& error)
 		{
-			std::cout << error.what()<<endl;
+			std::cout << error.what() << endl;
 			continue;
 		}
 		catch (const char* msg) { cout << msg << endl; }

@@ -9,7 +9,6 @@ void AD_FILE::setFileName(const std::string& fn)
 
 void AD_FILE::setTime()
 {
-	// current date/time based on current system
 	time_t now = time(0);
 	lastModified = localtime(&now);
 }
@@ -46,17 +45,9 @@ void AD_FILE::operator=(const AD_FILE& adf)
 		return;
 	}
 	std::cout << "Same File, nothing to copy!";
-
-	//return *this;
 }
 
 bool AD_FILE::operator==(const AD_FILE& fn) const
 {
 	return (fileName == fn.getFileName());
 }
-
-//bool AD_FILE::operator==(const std::string& fn) const
-//{
-//	return (fileName == fn);
-//}
-
