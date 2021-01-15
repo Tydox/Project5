@@ -10,7 +10,7 @@ DataFile::DataFile(const DataFile& df):AD_FILE(df.getFileName())
 	setData(df.getData());
 }
 
-int DataFile::getSize() const
+float DataFile::getSize() const
 {
 	//return size of data in bytes
 	return data.size()+1;
@@ -24,7 +24,7 @@ std::string DataFile::getData() const
 void DataFile::setData(const std::string& dt)
 {
 	if (dt.empty())
-		throw std::logic_error("Given Param to setData is null");
+		throw std::logic_error("Given string to setData is empty!");
 
 	data = dt;
 }

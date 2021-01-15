@@ -22,27 +22,43 @@ private:
 	std::string folderPath;
 	
 	static bool rootCreated;
-
+	static int rootlength;
 protected:
 
 
 public:
 	static Folder* root;
-	//static Folder root;
 
-	//default constructor
-	Folder();
-
-	//copy constructor
-	Folder(const Folder& f,std::string& path);
-	void buildRoot(const Folder& f);
 	//constructor
-	Folder(const std::string& fn, const std::string& fp,const std::string& rt="0");
-	void initFolder(const std::string& fp);
+	Folder(const std::string& fn, const std::string& fp);
 
 	//destructor
 	~Folder();
-	void killRoot(Folder& f);
+	
+	void addFileToArray(AD_FILE& adf);
+	void addNums(AD_FILE* adf); //count what type was added to array
+
+	//copy constructor
+	Folder(const Folder& f);
+	Folder(Folder& f, std::string& path);
+	void buildRoot(const Folder& f);
+	void initFolder(const std::string& fp);
+
+	static void searchF(Folder& cdr,Folder*& fp, std::string& fn, char& flag1);
+	
+	//static Folder root;
+
+	//default constructor
+	//Folder();
+
+	
+
+
+	
+	
+
+	
+	
 	//set
 	void setFolderPath(const std::string& fp);
 
@@ -50,20 +66,19 @@ public:
 	//BUG CHECK WHAT IT MEANS TO RETURN FULL PATH TO A FILE
 	std::string getFullPath() const;
 
-	std::string getData()const;
+	std::string getPath() const;
+	//std::string getData()const;
 	
-	void addFileToArray(AD_FILE& adf,char mode='0');
-	void addNums(AD_FILE* adf);
+	
 
 
-	virtual void operator=(AD_FILE& adf);
+	//virtual void operator=(AD_FILE& adf);
 
-
-	void mkfile(const std::string fn, const std::string fd);
-	void mkDir(const std::string fn);
+	void mkfile(const std::string& fn, const std::string& fd);
+	void mkDir(const std::string& fn);
 	//void isExist(const std::string fn, char type);
-	void isExist(const std::string fn);
-	AD_FILE& createItem(AD_FILE * adf);
+	void isExist(const std::string fn, const char& type);
+	//AD_FILE& createItem(AD_FILE * adf);
 	AD_FILE& createItem(const std::string fn, const std::string fd = "0");
 
 
@@ -80,7 +95,7 @@ public:
 	friend bool FC(Folder& cdr, std::string& src, std::string dst);
 
 
-	static std::string& splitFileName(const std::string& fn, std::string& nfn);
+	static std::string splitFileName(const std::string& fn, std::string& nfn);
 
 	DataFile* dfs(std::string& df) const;
 	

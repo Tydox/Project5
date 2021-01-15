@@ -14,11 +14,11 @@ int main() {
 	root->mkDir("D:");
 	root->dir();
 
-	
+
 	std::string directory = "C:";
 	Folder* curr = Folder::cd(directory);
 	root->dir();
-	
+
 	bool quit = false; string path;
 	string command, p_command;
 	char echoStream[256];
@@ -62,16 +62,40 @@ int main() {
 					cout << " not equals\n";
 				continue;
 			}
+			if (command == "!cut")
+			{
+				cin.ignore(1);
+				cin >> command;
+				Folder* newRoot = new Folder(*Folder::root, command);
+				Folder::root = newRoot;
+				curr = Folder::root;
+				continue;
+			}
+		
+		if (command == "!exit")
+		{
+			quit = !quit;
+			continue;
+		}
+		if (!command.empty())
+		{
+			std::cout << "Invalid cmd, try again!\n";
+			continue;
+		}
+			
+		}
+		catch (exception& error)
+		{
+			std::cout << error.what()<<endl;
+			continue;
 		}
 		catch (const char* msg) { cout << msg << endl; }
-		catch (...) {
+		catch (...)
+		{
 			std::cout << "unhandeled eception";
-		};
+		}
 		break;
 	} while (!quit);
+
+	delete root;
 }
-
-
-//#include <iostream>
-//
-//int main() {}

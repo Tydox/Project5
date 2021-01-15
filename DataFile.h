@@ -24,7 +24,7 @@ public:
 	~DataFile() { std::cout << "\nDataFile DESTRUCTOR - \n" << this->getFileName(); data.clear(); }
 	
 	//get size in bytes of object
-	int getSize()const;
+	float getSize()const;
 	std::string getData()const;
 
 	//set
