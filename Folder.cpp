@@ -16,7 +16,8 @@ Folder::Folder(const std::string& fn, const std::string& fp):AD_FILE(fn),files(n
 		}
 		catch(std::logic_error& error)
 		{
-			std::cout << error.what();
+			std::cout << error.what()<<std::endl;
+			delete this;
 			return;
 		}
 	}
