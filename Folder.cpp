@@ -1,5 +1,4 @@
 #include "Folder.h"
-
 Folder* Folder::root= new Folder("root","\\root");
 bool Folder::rootCreated = false;
 
@@ -81,7 +80,6 @@ void Folder::buildRoot(const Folder& f)
 		}
 	}
 }
-
 
 
 void Folder::initFolder(const std::string& fp)
@@ -333,7 +331,7 @@ bool Folder::fcmp(const Folder& fn, const Folder& ft) const
 			{
 				loopflag = true;
 				flag = fcmp(*f2ftmp, *f1ftmp);
-				//flag = (f2ftmp == f1ftmp);
+				//flag = (*f2ftmp == *f1ftmp);
 				if (flag == false)
 					break;
 			}
@@ -389,9 +387,9 @@ bool FC(Folder& cdr, std::string& src, std::string dst)
 	
 	if (!fileName1.empty() && !fileName2.empty())
 		{
-			DataFile* pf1 = f1->dfs(fileName1);
-			DataFile* pf2 = f2->dfs(fileName2);
-			return pf1 == pf2;
+			const DataFile* pf1 = f1->dfs(fileName1);
+			const DataFile* pf2 = f2->dfs(fileName2);
+			return *pf1 == *pf2;
 		}
 	
 	return *f1 == *f2;
@@ -410,8 +408,9 @@ std::string Folder::splitFileName(const std::string& fn, std::string& nfn)
 	}
 	else
 	{
-		nfn = fn.substr(founddot + 1);
-		std::string tmp = fn.substr(0, founddot);
+		std::size_t found = fn.find_last_of('\\');
+		nfn = fn.substr(found + 1);
+		std::string tmp = fn.substr(0,found);
 		return tmp;
 		
 	}

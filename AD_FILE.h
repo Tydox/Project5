@@ -8,7 +8,6 @@ class AD_FILE
 {
 private:
 
-	
 protected:
 	std::string fileName;
 	tm* lastModified;
@@ -30,7 +29,9 @@ protected:
 		AD_FILE(const AD_FILE& adf);
 		//operator=
 		virtual void operator=(const AD_FILE& adf);
-		virtual ~AD_FILE() { std::cout << "\nAD_FILE DESTRUCTOR - \n" << this->getFileName()<< std::endl; fileName.clear(); }
+
+		//###DEBUG###
+		//virtual ~AD_FILE() { std::cout << "\nAD_FILE DESTRUCTOR - \n" << this->getFileName()<< std::endl; fileName.clear(); }
 		//no need for destructor string self, pointer isn't allocated
 };
 

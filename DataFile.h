@@ -1,7 +1,6 @@
 #pragma once
 
 #include "AD_FILE.h"
-#include <typeinfo>
 
 class DataFile : public AD_FILE
 {
@@ -16,8 +15,9 @@ public:
 	DataFile(std::string fn, std::string df);
 	//copy constructor
 	DataFile(const DataFile& df);
+
 	//destructor ###debug###
-	~DataFile() { std::cout << "\nDataFile DESTRUCTOR - \n" << this->getFileName(); data.clear(); }
+	//~DataFile() { std::cout << "\nDataFile DESTRUCTOR - \n" << this->getFileName(); data.clear(); }
 	
 	//get size in bytes of object
 	float getSize()const;

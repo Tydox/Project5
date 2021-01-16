@@ -9,24 +9,23 @@ using namespace std;
 int main() {
 	Folder* root = Folder::root;
 	root->mkDir("C:");
-
-	root->dir();
+	//root->dir();
 	root->mkDir("D:");
-	root->dir();
-
-
+	//root->dir();
 	std::string directory = "C:";
 	Folder* curr = Folder::cd(directory);
-	root->dir();
+	//root->dir();
 
 	bool quit = false; string path;
 	string command, p_command;
 	char echoStream[256];
+
 	do {
 		//std::cout << curr->getFullPath().substr(5) << ">";//deletes Root Folder Name
 		std::cout << curr->pathURL(curr->getFullPath()) << ">";//deletes Root Folder Name
 		cin.ignore(cin.rdbuf()->in_avail());
 		cin >> command;
+
 		try {
 			if (command == "cd") {
 				cin.ignore(1);
@@ -63,7 +62,7 @@ int main() {
 					cout << " not equals\n";
 				continue;
 			}
-			if (command == "!cut")
+			if (command == "!cut") // test move/copy folder to new path
 			{
 				cin.ignore(1);
 				cin >> command;
@@ -71,9 +70,9 @@ int main() {
 				curr = root = Folder::root;
 				continue;
 			}
-			if (command == "!dupe")
+			if (command == "!dupe") //test copy constructor + destructor - object will delete afterwards 
 			{
-				std::cout << "Duping Main Folder!\n";
+				std::cout << "\nDuping Main Folder!\n";
 				Folder* newRoot2 = new Folder(*Folder::root);
 				std::cout << "Done!\nPrinting 1 sub folder!\n";
 				newRoot2->dir();
@@ -81,12 +80,12 @@ int main() {
 				continue;
 			}
 
-			if (command == "!exit")
+			if (command == "!exit") // command to end run
 			{
 				quit = !quit;
 				continue;
 			}
-			if (!command.empty())
+			if (!command.empty()) // command incase the command is not good
 			{
 				std::cout << "Invalid cmd, try again!\n";
 				continue;
