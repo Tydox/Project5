@@ -101,6 +101,7 @@ int main() {
 		catch (...)
 		{
 			std::cout << "unhandeled eception";
+			continue;
 		}
 		break;
 	} while (!quit);

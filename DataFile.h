@@ -31,6 +31,6 @@ public:
 	//operator overloading
 	bool operator==(const DataFile& df) const;
 	//overwriting virtual operator polymorphic
-	virtual bool operator==(const AD_FILE& fn);
+	virtual bool operator==(const AD_FILE& fn) const;
 	
 };

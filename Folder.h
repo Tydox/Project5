@@ -18,8 +18,8 @@ private:
 
 protected:
 	//support methods
-	static std::string splitFileName(const std::string& fn, std::string& nfn);
-	DataFile* dfs(std::string& df) const;
+	static std::string splitFileName(const std::string& fn, std::string& nfn, Folder* cdr = nullptr);
+	DataFile* dfs(const std::string& df) const;
 	bool fcmp(const Folder& fn, const Folder& ft) const;
 	static Folder* search(std::string& path, const Folder* f = nullptr);
 	void isExist(const std::string fn, const char& type);
@@ -29,7 +29,7 @@ protected:
 	void initFolder(const std::string& fp);
 	void addNums(AD_FILE* adf); //count what type was added to array
 	void addFileToArray(AD_FILE& adf);
-	static void searchF(Folder& cdr, Folder*& fp, std::string& fn, char& flag1);
+	static void searchF(Folder& cdr, Folder*& fp, std::string& fn);
 
 	//set
 	void setFolderPath(const std::string& fp);

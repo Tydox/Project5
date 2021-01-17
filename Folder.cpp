@@ -344,16 +344,20 @@ bool Folder::fcmp(const Folder& fn, const Folder& ft) const
 }
 
 
-void Folder::searchF(Folder& cdr,Folder*& fp, std::string& fn,char& flag1)
+void Folder::searchF(Folder& cdr,Folder*& fp, std::string& fn)
 {
 	Folder* ftot = nullptr;
-	char bslash = '\\';
-	if (flag1 == bslash)
-		ftot =  &cdr;
+	std::string tfn=fn;
+	
+	if (fn.at(0) == '\\') 
+	{
+		ftot = &cdr;
+		tfn = fn.substr(1);
+	}
 	else
 		ftot = root;
 
-	fp = ftot->cd(fn);
+	fp = ftot->cd(tfn);
 }
 
 
@@ -362,14 +366,10 @@ bool FC(Folder& cdr, std::string& src, std::string dst)
 {
 	//create strings
 	std::string fileName1;
-	std::string folderName1 = Folder::splitFileName(src, fileName1);
+	std::string folderName1 = Folder::splitFileName(src, fileName1,&cdr);
 
 	std::string fileName2;
-	std::string folderName2 = Folder::splitFileName(dst, fileName2);
-
-	//create flags for back slash
-	char flag1 = folderName1.at(0);
-	char flag2 = folderName2.at(0);
+	std::string folderName2 = Folder::splitFileName(dst, fileName2,&cdr);
 
 	//end condition, one is a file name and one is not
 	if((fileName1.empty() && !fileName2.empty()) || (!fileName1.empty() && fileName2.empty()))
@@ -381,8 +381,8 @@ bool FC(Folder& cdr, std::string& src, std::string dst)
 	Folder* f1 = nullptr;
 	Folder* f2 = nullptr;
 	
-	Folder::searchF(cdr,f1,folderName1, flag1);
-	Folder::searchF(cdr, f2, folderName2, flag2);
+	Folder::searchF(cdr,f1,folderName1);
+	Folder::searchF(cdr, f2, folderName2);
 
 	
 	if (!fileName1.empty() && !fileName2.empty())
@@ -397,7 +397,7 @@ bool FC(Folder& cdr, std::string& src, std::string dst)
 }
 
 
-std::string Folder::splitFileName(const std::string& fn, std::string& nfn)
+std::string Folder::splitFileName(const std::string& fn, std::string& nfn, Folder* cdr)
 {
 	const size_t failed = -1;
 	std::size_t founddot = fn.find_last_of('.');
@@ -408,16 +408,21 @@ std::string Folder::splitFileName(const std::string& fn, std::string& nfn)
 	}
 	else
 	{
+		std::string tmp;
 		std::size_t found = fn.find_last_of('\\');
+		if ('\\' == fn.at(0))
+			tmp = cdr->pathURL(cdr->getFullPath());
+		else
+			tmp = fn.substr(0, found);
+
 		nfn = fn.substr(found + 1);
-		std::string tmp = fn.substr(0,found);
 		return tmp;
 		
 	}
 }
 
 
-DataFile* Folder::dfs(std::string& df) const
+DataFile* Folder::dfs(const std::string& df) const
 {
 	for (int i = 0; i < this->innerfolders + this->innerdfiles; ++i)
 	{

@@ -47,7 +47,7 @@ bool DataFile::operator==(const DataFile& df) const
 	return dfcmp(df);
 }
 
-bool DataFile::operator==(const AD_FILE& fn)
+bool DataFile::operator==(const AD_FILE& fn) const
 {
 	try {
 		const DataFile fnp = dynamic_cast<const DataFile&>(fn);
